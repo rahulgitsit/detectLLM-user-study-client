@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import LoadingPage from "./components/LoadingPage";
+import InstructionPage from "./components/InstructionPage";
+import ChatInterface from "./components/ChatInterface";
+import "./App.css";
 
 function App() {
+  const [currentPage, setCurrentPage] = useState("loading");
+  const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
+
+  const handleUserSubmit = (id, name) => {
+    setUserId(id);
+    setUserName(name);
+    setCurrentPage("instruction");
+  };
+
+  const handleStartChat = () => {
+    setCurrentPage("chat");
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {currentPage === "loading" && (
+        <LoadingPage onUserSubmit={handleUserSubmit} />
+      )}
+      {currentPage === "instruction" && (
+        <InstructionPage onStartChat={handleStartChat} />
+      )}
+      {currentPage === "chat" && (
+        <ChatInterface userId={userId} user_name={userName} />
+      )}
     </div>
   );
 }

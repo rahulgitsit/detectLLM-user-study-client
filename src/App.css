@@ -1,38 +1,307 @@
+/* src/App.css */
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f2f5;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
+}
+
+.loading-page, .instruction-page, .chat-interface {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  width: 80%;
+  max-width: 600px;
+}
+
+h1, h2 {
+  color: #1877f2;
+  font-weight: 500;
+}
+
+form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+
+input, select, button {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #1877f2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #166fe5;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.chat-messages {
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+
+.message {
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 70%;
+}
+
+.message.user {
+  background-color: #e3f2fd;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.message.receiver {
+  background-color: #f0f0f0;
+  align-self: flex-start;
+}
+
+.message-input {
+  display: flex;
+}
+
+/* Input styles */
+.message-input input {
+  flex-grow: 1;
+  margin-right: 12px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* Placeholder styles */
+.message-input input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.message-count {
+  text-align: right;
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 6px;
+}
+
+.completion-message {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.completion-message p {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.scenario-info {
+  margin-bottom: 24px;
+}
+
+.scenario-info h2 {
+  margin-bottom: 6px;
+}
+
+.scenario-info p {
+  color: #484747;
+}
+
+.chat-interface-container {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.chat-interface {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+.thank-you-overlay {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+}
+
+.thank-you-message {
+  text-align: center;
+  max-width: 80%;
+  padding: 2rem;
+}
+
+.thank-you-message h2 {
+  color: #1877f2;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.thank-you-message p {
+  color: #8b4513;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.scenario-counter {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1877f2;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #e3f2fd;
+  border-radius: 6px;
+}
+
+/* Tutorial Dialog Styles */
+.tutorial-dialog {
+  position: absolute;
+  width: 300px;
+  background-color: #ffffff;
+  border: 2px solid #4a90e2;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* New styles for the heading */
+.tutorial-dialog h3 {
+  margin: 0 0 15px 0;
+  font-size: 22px;
+  color: #4a90e2;
+  font-weight: 600;
+}
+
+.tutorial-dialog p {
+  margin-bottom: 15px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.tutorial-dialog button {
+  background-color: #4a90e2;
   color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.App-link {
-  color: #61dafb;
+.tutorial-dialog button:hover {
+  background-color: #357abd;
+  transform: translateY(-2px);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+/* Progress Bar Styles */
+.tutorial-progress {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4a90e2;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Icon Styles */
+.tutorial-icon {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.info-icon::before {
+  content: '\ℹ️';
+  color: #4a90e2;
+}
+
+.check-icon::before {
+  content: '\✅';
+  color: #4caf50;
+}
+
+/* Positioning for different tutorial steps (unchanged) */
+.tutorial-step-0, .tutorial-step-1 {
+  top: 20px;
+  right: -300px;
+}
+
+.tutorial-step-2 {
+  top: 150px;
+  right: -300px;
+}
+
+.tutorial-step-3 {
+  bottom: 150px;
+  right: -300px;
+}
+
+.tutorial-step-4 {
+  bottom: 20px;
+  right: -300px;
+}
+
+/* Media query for mobile screens */
+@media (max-width: 768px) {
+  .tutorial-dialog {
+    position: fixed;
+    width: 80%;
+    max-width: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20px;
+    right: auto;
+    top: auto;
   }
 }

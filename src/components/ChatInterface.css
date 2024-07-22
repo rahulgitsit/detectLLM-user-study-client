@@ -1,0 +1,37 @@
+.tutorial-dialog {
+    position: absolute;
+    width: 300px;
+    background-color: #f0f8ff;
+    border: 2px solid #4a90e2;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .tutorial-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .tutorial-icon {
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .tutorial-progress {
+    font-weight: bold;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
