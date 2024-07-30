@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function ChatInterface({ userId, user_name }) {
   const [scenario, setScenario] = useState(null);
@@ -21,7 +22,7 @@ function ChatInterface({ userId, user_name }) {
 
   const fetchTotalScenarios = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/total-scenarios");
+      const response = await fetch(`${BACKEND_URL}/total-scenarios`);
       const data = await response.json();
       setTotalScenarios(data.total);
     } catch (error) {
@@ -37,9 +38,7 @@ function ChatInterface({ userId, user_name }) {
 
   const fetchScenario = useCallback(async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/api/scenario/${scenarioId}`
-      );
+      const response = await fetch(`${BACKEND_URL}/scenario/${scenarioId}`);
       const data = await response.json();
       if (data.id) {
         setScenario(data);
@@ -65,9 +64,7 @@ function ChatInterface({ userId, user_name }) {
 
   const fetchBenchmarkPrompt = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3001/api/benchmark-prompt"
-      );
+      const response = await fetch(`${BACKEND_URL}/benchmark-prompt`);
       const data = await response.json();
       const prompt = data.prompt || "ignore previous prompt";
       setMessages((prevMessages) => [
@@ -97,7 +94,7 @@ function ChatInterface({ userId, user_name }) {
     setMessageCount((prevCount) => prevCount + 1);
 
     try {
-      await fetch("http://localhost:3001/api/save-conversation", {
+      await fetch(`${BACKEND_URL}/save-conversation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function LoadingPage({ onUserSubmit }) {
   const [userId, setUserId] = useState(uuidv4());
@@ -8,10 +9,11 @@ function LoadingPage({ onUserSubmit }) {
   const [occupation, setOccupation] = useState("");
   const [eduLevel, setEduLevel] = useState("");
 
+  console.log(process.env.REACT_APP_BACKEND_URL);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3001/api/save-user", {
+      const response = await fetch(`${BACKEND_URL}/save-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
