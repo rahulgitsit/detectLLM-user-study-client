@@ -12,6 +12,10 @@ function LoadingPage({ onUserSubmit }) {
   console.log(process.env.REACT_APP_BACKEND_URL);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (age < 10 || age > 120) {
+      alert("Age must be greater than 10");
+      return;
+    }
     try {
       const response = await fetch(`${BACKEND_URL}/save-user`, {
         method: "POST",
@@ -50,6 +54,8 @@ function LoadingPage({ onUserSubmit }) {
           placeholder="Age"
           value={age}
           onChange={(e) => setAge(e.target.value)}
+          min="18"
+          max="100"
           required
         />
         <input
