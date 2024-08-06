@@ -9,11 +9,10 @@ function LoadingPage({ onUserSubmit }) {
   const [occupation, setOccupation] = useState("");
   const [eduLevel, setEduLevel] = useState("");
 
-  console.log(process.env.REACT_APP_BACKEND_URL);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (age < 10 || age > 120) {
-      alert("Age must be greater than 10");
+    if (age < 18 || age > 120) {
+      alert("Age must be greater than 18");
       return;
     }
     try {
