@@ -14,6 +14,8 @@
     padding: 10px;
     border-radius: 10px;
     max-width: 70%;
+    transition: all 0.3s ease;
+
   }
   
   .message.user {
@@ -29,6 +31,8 @@
   
   .message-input {
     display: flex;
+    transition: all 0.3s ease;
+
   }
   
   /* Input styles */
@@ -65,6 +69,7 @@
   
   .scenario-info {
     margin-bottom: 24px;
+    transition: all 0.3s ease;
   }
   
   .scenario-info h2 {
@@ -197,6 +202,7 @@
     background-color: #4a90e2;
     border-radius: 3px;
     transition: width 0.3s ease;
+    
   }
   
   /* Icon Styles */
@@ -257,4 +263,27 @@
     transition: background-color 0.3s, transform 0.2s !important; /* Smooth transitions */
 }
 
+/* Add this to your CSS file */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px 5px rgba(74, 144, 226, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(74, 144, 226, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 10px 5px rgba(74, 144, 226, 0.3);
+  }
+}
 
+.highlight-glow {
+  animation: glow 2s infinite;
+  border-radius: 12px;
+  padding: 10px;
+  margin: -10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 1000; /* Ensure highlighted elements are on top */
+  position: relative; /* Ensure z-index works */
+  /* background-color: rgba(255, 255, 0, 0.3); Add a semi-transparent background */
+  /* box-shadow: 0 0 10px rgba(255, 255, 0, 0.8); Add a glow effect */
+}

@@ -21,6 +21,7 @@ function ChatInterface({ userId, user_name }) {
   const [totalPrompts, setTotalPrompts] = useState(0);
   const [completedPrompts, setCompletedPrompts] = useState(0);
   const [scenarioComplete, setScenarioComplete] = useState(false); // New state to track scenario completion
+  const [highlightedElement, setHighlightedElement] = useState(null);
 
   const scenarioInfoRef = useRef(null);
   const firstMessageRef = useRef(null);
@@ -146,19 +147,23 @@ function ChatInterface({ userId, user_name }) {
     let targetRef;
     switch (step) {
       case 0:
-      case 1:
         targetRef = scenarioInfoRef;
+        setHighlightedElement("scenario-info");
+        break;
+      case 1:
+        targetRef = firstMessageRef;
+        setHighlightedElement("first-message");
         break;
       case 2:
-        targetRef = firstMessageRef;
+        targetRef = receiverMessageRef;
+        setHighlightedElement("receiver-message");
         break;
       case 3:
-        targetRef = receiverMessageRef;
-        break;
-      case 4:
         targetRef = inputAreaRef;
+        setHighlightedElement("message-input");
         break;
       default:
+        setHighlightedElement(null);
         return;
     }
 
@@ -172,22 +177,23 @@ function ChatInterface({ userId, user_name }) {
   }, []);
 
   useEffect(() => {
-    if (isTutorial) {
+    if (isTutorial && studyData) {
       // Use a short delay to ensure DOM elements are rendered
       const timer = setTimeout(() => {
         positionTutorialDialog(tutorialStep);
-      }, 50);
+      }, 100);
 
       return () => clearTimeout(timer);
     }
-  }, [isTutorial, tutorialStep, positionTutorialDialog]);
+  }, [isTutorial, tutorialStep, positionTutorialDialog, studyData]);
 
   const handleTutorialNext = () => {
-    if (tutorialStep < 4) {
+    if (tutorialStep < 3) {
       setTutorialStep((prevStep) => prevStep + 1);
     } else {
       setIsTutorial(false);
       setTutorialStarted(true);
+      setHighlightedElement(null); // Remove highlight after tutorial
     }
   };
 
@@ -223,13 +229,12 @@ function ChatInterface({ userId, user_name }) {
   const renderTutorialDialog = () => {
     const dialogContent = [
       "This is the scenario title and description. It gives you context for the conversation.",
-      "The description provides more details about the situation you're in.",
       "This is the first message from you. It starts the conversation based on the scenario.",
       "This is the message from the receiver. It's a response to your initial message.",
       "Now it's your turn! Press Enter or click 'Start' to begin, then type your response and press Enter or click 'Send'.",
     ][tutorialStep];
 
-    const progressPercentage = ((tutorialStep + 1) / 5) * 100;
+    const progressPercentage = ((tutorialStep + 1) / 4) * 100;
 
     return (
       <div
@@ -246,13 +251,13 @@ function ChatInterface({ userId, user_name }) {
           </div>
           <span
             className={`tutorial-icon ${
-              tutorialStep === 4 ? "check-icon" : "info-icon"
+              tutorialStep === 3 ? "check-icon" : "info-icon"
             }`}
           ></span>
         </div>
         <p>{dialogContent}</p>
         <button onClick={handleTutorialNext} className="green-button">
-          {tutorialStep < 4 ? "Next" : "Start"}
+          {tutorialStep < 3 ? "Next" : "Start"}
         </button>
         <p className="enter-instruction">Press Enter to continue</p>
       </div>
@@ -298,21 +303,31 @@ function ChatInterface({ userId, user_name }) {
       ) : (
         <>
           {tutorialStep >= 0 && (
-            <div className="scenario-info" ref={scenarioInfoRef}>
+            <div
+              className={`scenario-info ${
+                highlightedElement === "scenario-info" ? "highlight-glow" : ""
+              }`}
+              ref={scenarioInfoRef}
+            >
               {tutorialStep >= 0 && (
                 <h2>
                   Scenario {currentScenarioIndex + 1} /{" "}
                   {studyData.scenarios.length}: {currentScenario.title}
                 </h2>
               )}
-              {tutorialStep >= 1 && <p>{currentScenario.description}</p>}
+              {tutorialStep >= 0 && <p>{currentScenario.description}</p>}
             </div>
           )}
           <div className="chat-messages">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`message ${message.sender}`}
+                className={`message ${message.sender} ${
+                  (index === 0 && highlightedElement === "first-message") ||
+                  (index === 1 && highlightedElement === "receiver-message")
+                    ? "highlight-glow"
+                    : ""
+                }`}
                 ref={
                   index === 0
                     ? firstMessageRef
@@ -321,15 +336,20 @@ function ChatInterface({ userId, user_name }) {
                     : null
                 }
               >
-                {(tutorialStep >= 2 && index === 0) ||
-                (tutorialStep >= 3 && index === 1) ||
-                tutorialStep >= 4
+                {(tutorialStep >= 1 && index === 0) ||
+                (tutorialStep >= 2 && index === 1) ||
+                tutorialStep >= 3
                   ? message.content
                   : ""}
               </div>
             ))}
           </div>
-          <div className="message-input" ref={inputAreaRef}>
+          <div
+            className={`message-input ${
+              highlightedElement === "message-input" ? "highlight-glow" : ""
+            }`}
+            ref={inputAreaRef}
+          >
             <input
               type="text"
               value={userInput}
@@ -342,7 +362,7 @@ function ChatInterface({ userId, user_name }) {
               placeholder="Type your message here..."
               disabled={
                 isComplete ||
-                (isTutorial && tutorialStep < 4) ||
+                (isTutorial && tutorialStep < 3) ||
                 !tutorialStarted
               }
               ref={userInputRef}
@@ -351,7 +371,7 @@ function ChatInterface({ userId, user_name }) {
               onClick={handleSendMessage}
               disabled={
                 isComplete ||
-                (isTutorial && tutorialStep < 4) ||
+                (isTutorial && tutorialStep < 3) ||
                 !tutorialStarted
               }
             >
