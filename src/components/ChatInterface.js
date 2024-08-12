@@ -20,6 +20,7 @@ function ChatInterface({ userId, user_name }) {
   const [tutorialStarted, setTutorialStarted] = useState(false);
   const [totalPrompts, setTotalPrompts] = useState(0);
   const [completedPrompts, setCompletedPrompts] = useState(0);
+  const [scenarioComplete, setScenarioComplete] = useState(false); // New state to track scenario completion
 
   const scenarioInfoRef = useRef(null);
   const firstMessageRef = useRef(null);
@@ -31,6 +32,7 @@ function ChatInterface({ userId, user_name }) {
     try {
       const response = await fetch(`${BACKEND_URL}/study-data`);
       const data = await response.json();
+      console.log(data);
       setStudyData(data);
 
       const total = data.scenarios.reduce(
@@ -58,6 +60,7 @@ function ChatInterface({ userId, user_name }) {
       { sender: "receiver", content: currentPrompt.prompt },
     ]);
     setIsComplete(false);
+    setScenarioComplete(false); // Reset scenario completion state
 
     if (currentScenarioIndex === 0 && currentPromptIndex === 0) {
       setIsTutorial(true);
@@ -114,8 +117,7 @@ function ChatInterface({ userId, user_name }) {
     if (currentPromptIndex + 1 < currentScenario.prompts.length) {
       setCurrentPromptIndex((prevIndex) => prevIndex + 1);
     } else if (currentScenarioIndex + 1 < studyData.scenarios.length) {
-      setCurrentScenarioIndex((prevIndex) => prevIndex + 1);
-      setCurrentPromptIndex(0);
+      setScenarioComplete(true); // Mark scenario as complete
     } else {
       setAllScenariosComplete(true);
     }
@@ -128,11 +130,17 @@ function ChatInterface({ userId, user_name }) {
     }, 0);
   };
 
+  const handleNextScenario = () => {
+    setCurrentScenarioIndex((prevIndex) => prevIndex + 1);
+    setCurrentPromptIndex(0);
+    setScenarioComplete(false); // Reset scenario completion state
+  };
+
   useEffect(() => {
-    if (isComplete) {
-      userInputRef.current.focus(); // Set focus on the input element
+    if (isComplete && !scenarioComplete) {
+      handleNextRound(); // Automatically move to the next round
     }
-  }, [isComplete]);
+  }, [isComplete, scenarioComplete]);
 
   const positionTutorialDialog = useCallback((step) => {
     let targetRef;
@@ -187,8 +195,10 @@ function ChatInterface({ userId, user_name }) {
     if (event.key === "Enter") {
       if (isTutorial) {
         handleTutorialNext();
-      } else if (isComplete) {
+      } else if (isComplete && !scenarioComplete) {
         handleNextRound();
+      } else if (scenarioComplete) {
+        handleNextScenario();
       } else {
         handleSendMessage();
       }
@@ -203,8 +213,10 @@ function ChatInterface({ userId, user_name }) {
   }, [
     isTutorial,
     isComplete,
+    scenarioComplete,
     handleSendMessage,
     handleNextRound,
+    handleNextScenario,
     handleTutorialNext,
   ]);
 
@@ -346,17 +358,21 @@ function ChatInterface({ userId, user_name }) {
               Send
             </button>
           </div>
-          {isComplete && (
+          {scenarioComplete && (
             <div className="completion-message">
               <p>
-                Round complete! Press Enter or click 'Next Round' to continue.
+                Scenario complete! Press Enter or click 'Next Scenario' to
+                continue.
               </p>
-              <button onClick={handleNextRound}>Next Round</button>
+              <button onClick={handleNextScenario}>Next Scenario</button>
             </div>
           )}
         </>
       )}
-      {isTutorial && renderTutorialDialog()}
+      {isTutorial &&
+        tutorialPosition.top !== 0 &&
+        tutorialPosition.left !== 0 &&
+        renderTutorialDialog()}
     </div>
   );
 }
