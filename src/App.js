@@ -7,11 +7,11 @@ import "./App.css";
 function App() {
   const [currentPage, setCurrentPage] = useState("loading");
   const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
+  // const [userName, setUserName] = useState("");
 
-  const handleUserSubmit = (id, name) => {
+  const handleUserSubmit = (id) => {
     setUserId(id);
-    setUserName(name);
+    // setUserName(name);
     setCurrentPage("instruction");
   };
 
@@ -27,9 +27,7 @@ function App() {
       {currentPage === "instruction" && (
         <InstructionPage onStartChat={handleStartChat} />
       )}
-      {currentPage === "chat" && (
-        <ChatInterface userId={userId} user_name={userName} />
-      )}
+      {currentPage === "chat" && <ChatInterface userId={userId} />}
     </div>
   );
 }

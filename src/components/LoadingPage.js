@@ -4,7 +4,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function LoadingPage({ onUserSubmit }) {
   const [userId, setUserId] = useState(uuidv4());
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [occupation, setOccupation] = useState("");
   const [eduLevel, setEduLevel] = useState("");
@@ -23,14 +23,14 @@ function LoadingPage({ onUserSubmit }) {
         },
         body: JSON.stringify({
           u_id: userId,
-          u_name: name,
+          // u_name: name,
           age,
           occupation,
           highest_edu_lvl: eduLevel,
         }),
       });
       const data = await response.json();
-      onUserSubmit(data.u_id, name);
+      onUserSubmit(data.u_id);
     } catch (error) {
       console.error("Error saving user details:", error);
     }
@@ -41,13 +41,13 @@ function LoadingPage({ onUserSubmit }) {
       <h1>Welcome to the user study!</h1>
       <p>Please provide your details to begin.</p>
       <form onSubmit={handleSubmit}>
-        <input
+        {/* <input
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-        />
+        /> */}
         <input
           type="number"
           placeholder="Age"

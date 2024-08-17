@@ -3,7 +3,7 @@ import "./ChatInterface.css";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function ChatInterface({ userId, user_name }) {
+function ChatInterface({ userId }) {
   const [studyData, setStudyData] = useState(null);
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
@@ -28,6 +28,8 @@ function ChatInterface({ userId, user_name }) {
   const receiverMessageRef = useRef(null);
   const inputAreaRef = useRef(null);
   const userInputRef = useRef(null); // Add a ref for the input element
+  const [rewardCode, setRewardCode] = useState(""); // New state for reward code
+  const [isSaving, setIsSaving] = useState(false);
 
   const fetchStudyData = useCallback(async () => {
     try {
@@ -84,33 +86,46 @@ function ChatInterface({ userId, user_name }) {
   }, [studyData, startNewRound]);
 
   const handleSendMessage = async () => {
-    if (userInput.trim() === "" || allScenariosComplete) return;
+    if (userInput.trim() === "" || allScenariosComplete || isSaving) return;
 
     const newMessage = { sender: "user", content: userInput };
+    const userResponse = userInput; // Store userInput before clearing it
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     setUserInput("");
+    setIsSaving(true); // Set saving status to true
 
-    try {
-      await fetch(`${BACKEND_URL}/save-conversation`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid: userId,
-          u_name: user_name,
-          scenario_id: studyData.scenarios[currentScenarioIndex].id,
-          first_message: messages[0].content,
-          benchmark_prompt: messages[1].content,
-          user_response: userInput,
-          response_time: 0, // need to implement response time tracking
-        }),
-      });
-    } catch (error) {
-      console.error("Error saving conversation:", error);
-    }
+    const saveConversation = async (retryCount = 3) => {
+      try {
+        await fetch(`${BACKEND_URL}/save-conversation`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uid: userId,
+            // u_name: user_name,
+            scenario_id: studyData.scenarios[currentScenarioIndex].id,
+            first_message: messages[0].content,
+            benchmark_prompt: messages[1].content,
+            user_response: userResponse, // Use stored userInput
+            response_time: 0, // need to implement response time tracking
+          }),
+        });
+        setIsComplete(true);
+      } catch (error) {
+        console.error("Error saving conversation:", error);
+        if (retryCount > 0) {
+          console.log(`Retrying... (${3 - retryCount + 1})`);
+          saveConversation(retryCount - 1);
+        } else {
+          alert("Failed to save conversation. Please try again.");
+        }
+      } finally {
+        setIsSaving(false); // Reset saving status
+      }
+    };
 
-    setIsComplete(true);
+    saveConversation();
   };
 
   const handleNextRound = () => {
@@ -135,6 +150,7 @@ function ChatInterface({ userId, user_name }) {
     setCurrentScenarioIndex((prevIndex) => prevIndex + 1);
     setCurrentPromptIndex(0);
     setScenarioComplete(false); // Reset scenario completion state
+    startNewRound();
   };
 
   useEffect(() => {
@@ -142,6 +158,28 @@ function ChatInterface({ userId, user_name }) {
       handleNextRound(); // Automatically move to the next round
     }
   }, [isComplete, scenarioComplete]);
+
+  const fetchRewardCode = useCallback(async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/generate-code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ uid: userId }), // Include userId in the request body
+      });
+      const data = await response.json();
+      setRewardCode(data.code);
+    } catch (error) {
+      console.error("Error fetching reward code:", error);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (allScenariosComplete) {
+      fetchRewardCode();
+    }
+  }, [allScenariosComplete, fetchRewardCode]);
 
   const positionTutorialDialog = useCallback((step) => {
     let targetRef;
@@ -295,9 +333,12 @@ function ChatInterface({ userId, user_name }) {
       {!allScenariosComplete && renderProgressBar()}
       {allScenariosComplete ? (
         <div className="thank-you-message">
-          <h2>Thank You, {user_name}</h2>
+          <h2>Thank You!</h2>
           <p>
             You have completed all scenarios. We appreciate your participation.
+          </p>
+          <p>
+            Your reward code is: <strong>{rewardCode}</strong>
           </p>
         </div>
       ) : (
