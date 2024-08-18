@@ -16,19 +16,25 @@ function LoadingPage({ onUserSubmit }) {
       return;
     }
     try {
-      const response = await fetch(`${BACKEND_URL}/save-user`, {
+      const response = await fetch(`${BACKEND_URL}/api/save-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           u_id: userId,
-          // u_name: name,
           age,
           occupation,
           highest_edu_lvl: eduLevel,
         }),
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       onUserSubmit(data.u_id);
     } catch (error) {
