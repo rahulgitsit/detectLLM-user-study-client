@@ -266,8 +266,8 @@ function ChatInterface({ userId }) {
 
   const renderTutorialDialog = () => {
     const dialogContent = [
-      "This is the scenario title and description. It gives you context for the conversation.",
-      "This is the first message from you. It starts the conversation based on the scenario.",
+      "This is the scenario title and description. It is the context for the conversation.",
+      "This is the first message from YOU. It is the first message in the conversation.",
       "This is the message from the receiver. It's a response to your initial message.",
       "Now it's your turn! Press Enter or click 'Start' to begin, then type your response and press Enter or click 'Send'.",
     ][tutorialStep];
