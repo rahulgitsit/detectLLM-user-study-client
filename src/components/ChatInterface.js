@@ -35,6 +35,28 @@ function ChatInterface({ userId }) {
     try {
       const response = await fetch(`${BACKEND_URL}/api/study-data`);
       const data = await response.json();
+
+      // Add custom prompts for the first scenario
+      data.scenarios[0].prompts.unshift(
+        {
+          prompt:
+            "Hi, thanks for reaching out! I'm actually interested in hearing more about Audi. Let's chat soon.",
+        },
+        {
+          prompt:
+            "Hi, I appreciate the message, but I'm not looking for a car right now. Thanks!",
+        }
+      );
+
+      // Add custom prompts for the second scenario
+      data.scenarios[1].prompts.unshift(
+        {
+          prompt:
+            "Hi, I just saw your message. This sounds serious—what do I need to do?",
+        },
+        { prompt: "Haha, I don't think the IRS contacts people over text. Bye" }
+      );
+
       console.log(data);
       setStudyData(data);
 
@@ -47,7 +69,6 @@ function ChatInterface({ userId }) {
       console.error("Error fetching study data:", error);
     }
   }, []);
-
   useEffect(() => {
     fetchStudyData();
   }, [fetchStudyData]);

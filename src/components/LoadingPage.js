@@ -63,13 +63,44 @@ function LoadingPage({ onUserSubmit }) {
           max="100"
           required
         />
-        <input
-          type="text"
-          placeholder="Occupation"
+        <select
           value={occupation}
           onChange={(e) => setOccupation(e.target.value)}
           required
-        />
+        >
+          <option value="">Select Occupation</option>
+          <option value="Administrative and Office">
+            Administrative and Office
+          </option>
+          <option value="Arts, Design, and Media">
+            Arts, Design, and Media
+          </option>
+          <option value="Business and Finance">Business and Finance</option>
+          <option value="Construction and Trades">
+            Construction and Trades
+          </option>
+          <option value="Education and Training">Education and Training</option>
+          <option value="Engineering and IT">Engineering and IT</option>
+          <option value="Healthcare and Social Assistance">
+            Healthcare and Social Assistance
+          </option>
+          <option value="Hospitality and Service">
+            Hospitality and Service
+          </option>
+          <option value="Law and Public Safety">Law and Public Safety</option>
+          <option value="Manufacturing and Production">
+            Manufacturing and Production
+          </option>
+          <option value="Sales, Retail, and Customer Service">
+            Sales, Retail, and Customer Service
+          </option>
+          <option value="Science and Research">Science and Research</option>
+          <option value="Transportation and Logistics">
+            Transportation and Logistics
+          </option>
+          <option value="Miscellaneous">Miscellaneous</option>
+          <option value="Other">Other</option>
+        </select>
         <select
           value={eduLevel}
           onChange={(e) => setEduLevel(e.target.value)}
