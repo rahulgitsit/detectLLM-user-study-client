@@ -182,7 +182,7 @@ function ChatInterface({ userId }) {
 
   const fetchRewardCode = useCallback(async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/generate-code`, {
+      const response = await fetch(`${BACKEND_URL}/api/fetch-reward-code`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
