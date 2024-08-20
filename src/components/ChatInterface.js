@@ -33,7 +33,7 @@ function ChatInterface({ userId }) {
 
   const fetchStudyData = useCallback(async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/study-data`);
+      const response = await fetch(`${BACKEND_URL}/api/study-data`);
       const data = await response.json();
       console.log(data);
       setStudyData(data);
@@ -96,7 +96,7 @@ function ChatInterface({ userId }) {
 
     const saveConversation = async (retryCount = 3) => {
       try {
-        await fetch(`${BACKEND_URL}/save-conversation`, {
+        await fetch(`${BACKEND_URL}/api/save-conversation`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -161,7 +161,7 @@ function ChatInterface({ userId }) {
 
   const fetchRewardCode = useCallback(async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/generate-code`, {
+      const response = await fetch(`${BACKEND_URL}/api/generate-code`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -266,8 +266,8 @@ function ChatInterface({ userId }) {
 
   const renderTutorialDialog = () => {
     const dialogContent = [
-      "This is the scenario title and description. It gives you context for the conversation.",
-      "This is the first message from you. It starts the conversation based on the scenario.",
+      "This is the scenario title and description. It is the context for the conversation.",
+      "This is the first message from YOU. It is the first message in the conversation.",
       "This is the message from the receiver. It's a response to your initial message.",
       "Now it's your turn! Press Enter or click 'Start' to begin, then type your response and press Enter or click 'Send'.",
     ][tutorialStep];
