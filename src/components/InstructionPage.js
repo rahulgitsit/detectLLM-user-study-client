@@ -4,6 +4,7 @@ import React from "react";
 
 import "./InstructionPage.css";
 
+
 function InstructionPage({ onStartChat }) {
   return (
     <div className="instruction-page">

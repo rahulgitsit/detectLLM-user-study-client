@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import amritaLogo from '../amrita-1024x327.jpg';
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+
 
 function LoadingPage({ onUserSubmit }) {
   const [userId, setUserId] = useState(uuidv4());
@@ -44,7 +48,8 @@ function LoadingPage({ onUserSubmit }) {
 
   return (
     <div className="loading-page">
-      <h1>Welcome to the user study!</h1>
+      <img src={amritaLogo} alt="Amrita Logo" className="amrita-logo" />
+      <h1>Welcome to our user study</h1>
       <p>Please provide your details to begin.</p>
       <form onSubmit={handleSubmit}>
         {/* <input

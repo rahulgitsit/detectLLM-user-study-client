@@ -82,3 +82,9 @@ button:disabled {
   color: #676767;
   font-size: 0.8rem;
 }
+.amrita-logo {
+  width: 100%;
+  /* max-width: 500px; */
+  height: auto;
+  margin-bottom: 20px;
+}
