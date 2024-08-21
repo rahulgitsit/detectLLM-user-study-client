@@ -57,7 +57,7 @@ function ChatInterface({ userId }) {
         { prompt: "Haha, I don't think the IRS contacts people over text. Bye" }
       );
 
-      console.log(data);
+      // console.log(data);
       setStudyData(data);
 
       const total = data.scenarios.reduce(
@@ -115,6 +115,10 @@ function ChatInterface({ userId }) {
     setUserInput("");
     setIsSaving(true); // Set saving status to true
 
+    const currentScenario = studyData.scenarios[currentScenarioIndex];
+    const currentPrompt = currentScenario.prompts[currentPromptIndex];
+    // console.log(currentPrompt);
+    // console.log(currentScenario);
     const saveConversation = async (retryCount = 3) => {
       try {
         await fetch(`${BACKEND_URL}/api/save-conversation`, {
@@ -124,11 +128,12 @@ function ChatInterface({ userId }) {
           },
           body: JSON.stringify({
             uid: userId,
-            // u_name: user_name,
-            scenario_id: studyData.scenarios[currentScenarioIndex].id,
+            scenario_id: currentScenario.id,
+            tactic: currentPrompt.tactic, // Add tactic from the current prompt
+            technique: currentPrompt.technique, // Add technique from the current prompt
             first_message: messages[0].content,
             benchmark_prompt: messages[1].content,
-            user_response: userResponse, // Use stored userInput
+            user_response: userResponse,
             response_time: 0, // need to implement response time tracking
           }),
         });
